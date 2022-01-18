@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  myapp-mysql: 
+    platform: linux/x86_64
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=myapp-user
+      - MYSQL_PASSWORD=password
+    ports:
+      - 3307:3306
+  myapp-main:
+    build: ./docker-compose
+    restart: on-failure 
+    depends_on:
+      - myapp-mysql
+    ports:
+      - 9902:8080
+    environment:
+      - DATABASE_HOST=myapp-mysql
+      - DATABASE_USER=myapp-user
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=mydb
+      - DATABASE_PORT=3306
